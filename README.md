@@ -37,6 +37,7 @@ Obtain an access token from the [Login](#Login) endpoint.
 ## Endpoints
 
 ### Register
+---
 __Description:__ Pass an email and password to get a JWT valid for 24 hours  
 __Authorization required:__ `false`  
 __Method:__ `\POST`  
@@ -100,6 +101,7 @@ __Content-Type:__ `application/json`
 
 
 ### Login
+---
 __Description:__ Pass an email and password to get a JWT valid for 24 hours  
 __Authorization required:__ `false`  
 __Method:__ `\POST`  
@@ -164,6 +166,7 @@ __Content-Type:__ `application/json`
 
 
 ### List users by handle 
+---
 __Description:__ List details of GitHub users based on account handle. Max 10.  
 __Authorization required:__ `true` (see [Authorization](#Authorization))  
 __Method:__ `\POST`  
@@ -226,55 +229,8 @@ __Content-Type:__ `application/json`
             "repo_count": 172,
             "followers_count": 1492,
             "avg_followers_count": 8.674418604651162
-        },
-        {
-            "name": "ｅｎｄａｎ",
-            "login": "jjjjcccjjf",
-            "company": null,
-            "repo_count": 55,
-            "followers_count": 4,
-            "avg_followers_count": 0.07272727272727272
-        },
-        {
-            "name": "Ro11ingButler",
-            "login": "ro11ingbutler",
-            "company": null,
-            "repo_count": 2,
-            "followers_count": 1,
-            "avg_followers_count": 0.5
-        },
-        {
-            "name": null,
-            "login": "sh",
-            "company": null,
-            "repo_count": 45,
-            "followers_count": 45,
-            "avg_followers_count": 1
-        },
-        {
-            "name": null,
-            "login": "sherlock",
-            "company": null,
-            "repo_count": 16,
-            "followers_count": 56,
-            "avg_followers_count": 3.5
-        },
-        {
-            "name": "Thomas Watson",
-            "login": "watson",
-            "company": "@elastic",
-            "repo_count": 422,
-            "followers_count": 1764,
-            "avg_followers_count": 4.180094786729858
-        },
-        {
-            "name": "zim",
-            "login": "zim",
-            "company": null,
-            "repo_count": 25,
-            "followers_count": 1,
-            "avg_followers_count": 0.04
-        }
+        }, 
+        ...
     ],
     "meta": {
         "errors": "Request failed due to following response errors:\n - Could not resolve to a User with the login of 'octokit'.",
