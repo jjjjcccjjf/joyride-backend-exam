@@ -15,9 +15,11 @@ In order to access the API endpoint described above, the user should register an
 * [Base URL](#Base%20URL)
 * [Authorization](#Authorization)
 * [Endpoints](#Endpoints)
-	* [Register](#Register)
-	* [Login](#Login)
-	* [List users by handle](#List%20users%20by%20handle)
+	* Does not require Auth
+		* [Register](#Register)
+		* [Login](#Login)
+	* Requires Auth
+		* [List users by handle](#List%20users%20by%20handle)
 
 
 ## Base URL
@@ -30,9 +32,10 @@ In order to access the API endpoint described above, the user should register an
 Authorization headers
 
 ```
-Authorization: Bearer <JWT>
+x-access-token: <JWT>
 ```
 
+Obtain an access token from the [Login](#Login) endpoint.
 
 ## Endpoints
 ---
@@ -40,12 +43,17 @@ Authorization: Bearer <JWT>
 
 ### Register
 ---
-Description: Pass an email and password to get a JWT valid for 24 hours
-Authorization required: `false`
-Method: `\POST`
-Content-Type: `application/json`
+__Description:__ Pass an email and password to get a JWT valid for 24 hours
+__Authorization required:__ `false`
+__Method:__ `\POST`
 
-#### Request 
+#### Request Payload
+__Content-Type:__ `application/json`
+
+| Key | Example value | Required |
+| ---- | ---------------- | --------- |
+| email | lorenzodante.dev@gmail.com | true |
+| password | supersecret | true |
 
 ```
 {
@@ -56,19 +64,60 @@ Content-Type: `application/json`
 
 #### Response
 
+##### 200 OK
 ```
-# TODO
+{
+    "data": {
+        "id": 114,
+        "email": "lorenzodante.dev@gmail.com",
+        "createdAt": "2023-01-26T13:19:07.848Z",
+        "updatedAt": "2023-01-26T13:19:07.848Z"
+    },
+    "meta": {
+        "errors": "",
+        "totalRows": 1
+    }
+}
+```
+
+##### 400 Bad Request
+
+###### Existing email
+```
+{
+    "data": {},
+    "meta": {
+        "errors": "Email is already in use",
+        "totalRows": 0
+    }
+}
+```
+
+###### Missing fields
+```
+{
+    "data": {},
+    "meta": {
+        "errors": "Email and password is required. See documentation for more info: https://github.com/jjjjcccjjf/joyride-backend-exam",
+        "totalRows": 0
+    }
+}
 ```
 
 
 ### Login
 ---
-Description: Pass an email and password to get a JWT valid for 24 hours
-Authorization required: `false`
-Method: `\POST`
-Content-Type: `application/json`
+__Description:__ Pass an email and password to get a JWT valid for 24 hours
+__Authorization required:__ `false`
+__Method:__ `\POST`
 
-#### Request 
+#### Request Payload
+__Content-Type:__ `application/json`
+
+| Key | Example value | Required |
+| ---- | ---------------- | --------- |
+| email | lorenzodante.dev@gmail.com | true |
+| password | supersecret | true |
 
 ```
 {
@@ -79,32 +128,76 @@ Content-Type: `application/json`
 
 #### Response
 
+##### 200 OK
 ```
-# TODO
+{
+    "data": {
+        "id": 114,
+        "email": "lorenzodante.dev@gmail.com",
+        "createdAt": "2023-01-26T13:19:07.848Z",
+        "updatedAt": "2023-01-26T13:19:07.848Z",
+        "accessToken": "xxx"
+    },
+    "meta": {
+        "errors": "",
+        "totalRows": 1
+    }
+}
+```
+
+##### 400 Bad Request
+
+###### Invalid credentials
+```
+{
+    "data": {},
+    "meta": {
+        "errors": "Invalid credentials",
+        "totalRows": 0
+    }
+}
+```
+
+###### Invalid email
+```
+{
+    "data": {},
+    "meta": {
+        "errors": "User not found.",
+        "totalRows": 0
+    }
+}
 ```
 
 
 ### List users by handle 
 ---
-Description: List details of GitHub users based on account handle. Max 10.
-Authorization required: `true` (see [Authorization](#Authorization))
-Method: `\POST`
-Content-Type: `application/json`
+__Description:__ List details of GitHub users based on account handle. Max 10.
+__Authorization required:__ `true` (see [Authorization](#Authorization))
+__Method:__ `\POST`
 
-#### Request 
+#### Headers
+| Key | Example value | Required |
+| ---- | ---------------- | --------- |
+| x-access-token | \<JWT\> | true |
+
+#### Request Payload
+__Content-Type:__ `application/json`
+
+| Key | Example value | Required |
+| ---- | ---------------- | --------- |
+| login | Array\<String\> | true |
 
 ```
 {
-
     "login": [
         "ro11ingbutler",
         "jjjjcccjjf",
         "jadjoubran",
         "octokit",
         "sh",
-        "abra",
         "zim",
-        "hound",
+        "amy",
         "sherlock",
         "holmes",
         "watson"
@@ -114,7 +207,114 @@ Content-Type: `application/json`
 
 #### Response
 
+##### 200 OK
 ```
-# TODO
+{
+    "data": [
+        {
+            "name": "Amy Chen",
+            "login": "amy",
+            "company": null,
+            "repo_count": 57,
+            "followers_count": 333,
+            "avg_followers_count": 5.842105263157895
+        },
+        {
+            "name": "Jason Holmes",
+            "login": "holmes",
+            "company": "@Square",
+            "repo_count": 42,
+            "followers_count": 10,
+            "avg_followers_count": 0.23809523809523808
+        },
+        {
+            "name": "Jad Joubran",
+            "login": "jadjoubran",
+            "company": "Jad Joubran B.V.",
+            "repo_count": 172,
+            "followers_count": 1492,
+            "avg_followers_count": 8.674418604651162
+        },
+        {
+            "name": "ｅｎｄａｎ",
+            "login": "jjjjcccjjf",
+            "company": null,
+            "repo_count": 55,
+            "followers_count": 4,
+            "avg_followers_count": 0.07272727272727272
+        },
+        {
+            "name": "Ro11ingButler",
+            "login": "ro11ingbutler",
+            "company": null,
+            "repo_count": 2,
+            "followers_count": 1,
+            "avg_followers_count": 0.5
+        },
+        {
+            "name": null,
+            "login": "sh",
+            "company": null,
+            "repo_count": 45,
+            "followers_count": 45,
+            "avg_followers_count": 1
+        },
+        {
+            "name": null,
+            "login": "sherlock",
+            "company": null,
+            "repo_count": 16,
+            "followers_count": 56,
+            "avg_followers_count": 3.5
+        },
+        {
+            "name": "Thomas Watson",
+            "login": "watson",
+            "company": "@elastic",
+            "repo_count": 422,
+            "followers_count": 1764,
+            "avg_followers_count": 4.180094786729858
+        },
+        {
+            "name": "zim",
+            "login": "zim",
+            "company": null,
+            "repo_count": 25,
+            "followers_count": 1,
+            "avg_followers_count": 0.04
+        }
+    ],
+    "meta": {
+        "errors": "Request failed due to following response errors:\n - Could not resolve to a User with the login of 'octokit'.",
+        "totalRows": 9
+    }
+}
 ```
 
+##### 400 Bad Request
+
+###### Request Payload exceeds required amount
+```
+{
+    "data": [],
+    "meta": {
+        "errors": "Bad request. Provided users cannot exceed amount: 10",
+        "totalRows": 0
+    }
+}
+```
+
+###### Invalid or empty request payload
+```
+{
+    "data": [],
+    "meta": {
+        "errors": "Invalid request payload. See documentation for more info: https://github.com/jjjjcccjjf/joyride-backend-exam",
+        "totalRows": 0
+    }
+}
+```
+
+---
+
+###### 🚧 End of documentation - [back to top](#Github%20API%20-%20Backend%20Engineer%20Technical%20Exam) 🚧
