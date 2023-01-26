@@ -1,4 +1,4 @@
-const { authJwt, validations } = require("../middleware");
+const { authJwt, validations, caching } = require("../middleware");
 const controller = require("../controllers/user.controller");
 
 module.exports = function (app) {
@@ -11,7 +11,7 @@ module.exports = function (app) {
     });
     app.post(
         "/api/list",
-        [authJwt.verifyToken, validations.checkMaxTenLogins],
+        [authJwt.verifyToken, validations.checkReqBody, validations.checkMaxTenLogins],
         controller.list
     );
 };

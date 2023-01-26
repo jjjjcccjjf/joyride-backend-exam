@@ -10,7 +10,7 @@ module.exports = function (app) {
         next();
     });
 
-    app.post("/api/auth/register", [verifyRegister.checkDuplicateEmail], controller.register);
+    app.post("/api/auth/register", [verifyRegister.checkRequestBody, verifyRegister.checkDuplicateEmail], controller.register);
 
     app.post("/api/auth/login", controller.login);
 };

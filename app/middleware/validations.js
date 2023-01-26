@@ -1,12 +1,21 @@
+const responseTemplate = require('../helpers/responseTemplate');
+
+
+checkReqBody = async (req, res, next) => {
+    const { login } = req.body;
+    if (!login || login.length <= 0) {
+        res.status(400).json(responseTemplate([], "Invalid request payload. See documentation for more info: https://github.com/jjjjcccjjf/joyride-backend-exam"))
+        return;
+    }
+
+    next();
+}
 
 checkMaxTenLogins = async (req, res, next) => {
     const { login } = req.body;
 
     if (login.length > 10) {
-        res.status(400).send({
-            message: "Bad request. Users cannot exceed 10"
-        });
-        
+        res.status(400).json(responseTemplate([], "Provided users cannot exceed amount: 10."))
         return;
     }
 
@@ -14,7 +23,8 @@ checkMaxTenLogins = async (req, res, next) => {
 }
 
 const validations = {
-    checkMaxTenLogins: checkMaxTenLogins
+    checkMaxTenLogins: checkMaxTenLogins,
+    checkReqBody: checkReqBody
 }
 
 module.exports = validations;
