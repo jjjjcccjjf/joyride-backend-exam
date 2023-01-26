@@ -1,6 +1,6 @@
 const Redis = require('ioredis');
 const fs = require('fs');
-const responseTemplate = require('../helpers/responseTemplate');
+const responseHelper = require('../helpers/responseHelper');
 
 const redis = new Redis({
     host: 'redis-13854.c84.us-east-1-2.ec2.cloud.redislabs.com',
@@ -16,12 +16,6 @@ const graphqlWithAuth = graphql.defaults({
 });
 
 exports.list = async (req, res) => {
-
-    // redis.set("mykey", "value");
-
-    // redis.get("mykey").then((result) => {
-    //     console.log(result + " from redis"); // Prints "value"
-    // });
 
     const { login } = req.body
     const dynamicQuery = login.map(login => `${login}: user(login: "${login}") { ...UserFragment }`).join("\n")
@@ -49,18 +43,16 @@ exports.list = async (req, res) => {
         if (error instanceof GraphqlResponseError) {
             data = error.response.data
             errors = error.message
-
-            console.log("Request failed:", error.request);
-            console.log(error.message);
         } else {
             // handle non-GraphQL error
         }
     }
 
     // Delete key-value pairs that were not found
-    // data = Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null));
+    data = Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null));
 
-    // // Sort the data alphabetically
+
+    // Sort the data alphabetically
     // const sortedData = Object.keys(data).sort().reduce(
     //     (obj, key) => {
     //         obj[key] = data[key];
@@ -69,7 +61,6 @@ exports.list = async (req, res) => {
     //     {}
     // );
 
-    let formattedData = []
     // array.sort((a, b) => {
     //     if (a.login < b.login) {
     //         return -1;
@@ -79,18 +70,18 @@ exports.list = async (req, res) => {
     //     }
     //     return 0;
     // });
+
+    let formattedData = []
     for (let key in data) {
         if (data[key] !== null) {
-            formattedData.push({
-                name: data[key].name,
-                login: data[key].login,
-                company: data[key].company,
-                repo_count: data[key].repositories.totalCount,
-                followers_count: data[key].followers.totalCount,
-                avg_followers_count: data[key].followers.totalCount / data[key].repositories.totalCount
-            })
+            formattedData.push(responseHelper.formatData(data[key]))
+            redis.set(key, JSON.stringify(data[key]), "EX", 30);
         }
     }
+
+    // for (let key in data) {
+    //     redis.set(key, JSON.stringify(data[key]), "EX", 30);
+    // }
 
     formattedData.sort((a, b) => {
         if (a.login < b.login) {
@@ -102,5 +93,5 @@ exports.list = async (req, res) => {
         return 0;
     });
 
-    res.json(responseTemplate(formattedData, errors))
+    res.json(responseHelper.responseTemplate(formattedData, errors))
 }

@@ -1,7 +1,20 @@
+const Redis = require('ioredis');
+const redis = new Redis({
+    host: 'redis-13854.c84.us-east-1-2.ec2.cloud.redislabs.com',
+    port: 13854,
+    password: process.env.REDIS_PASSWORD
+});
+// @Refactor ^^
+
 redisLookup = async (req, res, next) => {
 
-    // const {login} = req.body
+    const { login } = req.body
 
+    const all = await redis.mget(...login);
+    console.log(all); // [ 'Bob', '20', 'I am a programmer' ]
+
+    res.send("stopped by redis!")
+    return;
     // try {
     //     const cacheResults = await redisClient.get(species);
     //     if (cacheResults) {

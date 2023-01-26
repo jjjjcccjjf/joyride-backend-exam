@@ -1,6 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient()
-const responseTemplate = require("../helpers/responseTemplate")
+const responseHelper = require("../helpers/responseHelper")
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
@@ -15,12 +15,12 @@ exports.register = async (req, res) => {
             password: bcrypt.hashSync(password, 8),
         },
     }).catch(err => {
-        res.status(500).json(responseTemplate({}, err.message));
+        res.status(500).json(responseHelper.responseTemplate({}, err.message));
     });
 
     delete result.password
 
-    res.json(responseTemplate(result, ""))
+    res.json(responseHelper.responseTemplate(result, ""))
 };
 
 exports.login = async (req, res) => {
@@ -32,7 +32,7 @@ exports.login = async (req, res) => {
         }
     }).then(user => {
         if (!user) {
-            return res.status(400).json(responseTemplate({}, "User not found or invalid request payload. See documentation for more info: https://github.com/jjjjcccjjf/joyride-backend-exam"));
+            return res.status(400).json(responseHelper.responseTemplate({}, "User not found or invalid request payload. See documentation for more info: https://github.com/jjjjcccjjf/joyride-backend-exam"));
         }
 
         const passwordIsValid = bcrypt.compareSync(
@@ -41,7 +41,7 @@ exports.login = async (req, res) => {
         );
 
         if (!passwordIsValid) {
-            return res.status(400).json(responseTemplate({}, "Invalid credentials."));
+            return res.status(400).json(responseHelper.responseTemplate({}, "Invalid credentials."));
         }
 
         const token = jwt.sign({ id: user.id }, process.env.APP_SECRET, {
@@ -51,10 +51,10 @@ exports.login = async (req, res) => {
         delete user.password
         user.accessToken = token
 
-        res.json(responseTemplate(user, ""));
+        res.json(responseHelper.responseTemplate(user, ""));
 
     }).catch(err => {
-        res.status(500).json(responseTemplate({}, err.message));
+        res.status(500).json(responseHelper.responseTemplate({}, err.message));
     });
 
 
