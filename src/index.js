@@ -1,18 +1,11 @@
 require('dotenv').config()
 const express = require('express')
 const { PrismaClient } = require('@prisma/client');
-// const { Octokit } = require("@octokit/core");
-// const {
-//     restEndpointMethods,
-// } = require("@octokit/plugin-rest-endpoint-methods");
-
-const { graphql } = require("@octokit/graphql");
+const { graphql, GraphqlResponseError } = require("@octokit/graphql");
 
 const app = express()
 const PORT = process.env.PORT || 3000;
 const prisma = new PrismaClient()
-// const MyOctokit = Octokit.plugin(restEndpointMethods);
-// const octokit = new MyOctokit({ auth: process.env.GITHUB_PAT });
 
 const graphqlWithAuth = graphql.defaults({
     headers: {
@@ -36,53 +29,90 @@ app.post(`/api/register`, async (req, res) => {
 })
 
 app.post('/api/login', async (req, res) => {
-    const { email, password } = req.body
+    const { login } = req.body
 
     // res.json(jwt)
 })
 
-// app.get('/api/__list', async (req, res) => {
-//     // const { data: { login } } = await octokit.rest.users.getByUsername({
-//     // const { data } = await octokit.rest.users.getByUsername({
-//     const { data: { name, login, company, followers, public_repos } } = await octokit.rest.users.getByUsername({
-//         username: "ro11ingbutler"
-//         // }, {
-//         //     username: "jjjjcccjjf"
-//     });
-//     console.log({ name, login, company, followers, public_repos, avg_follower_per_repo: followers / public_repos })
-//     console.log(data)
-//     res.json(`Hello`)
-// })
+app.post('/api/list', async (req, res) => {
 
-app.get('/api/list', async (req, res) => {
+    const { login } = req.body
+    // const logins = login.join(" OR ");
 
-    const data = await graphqlWithAuth({
-        query: `query SearchUsers($login: String!) {
-            search(query: $login, type: USER, first: 10) {
-              edges {
-                node {
-                  ... on User {
-                    name
-                    login
-                    company
-                    repositories(privacy: PUBLIC) {
-                      totalCount
-                    }
-                    followers {
-                      totalCount
-                    }
-                  }
-                }
-              }
+    // const { search } = await graphqlWithAuth({
+    //     query: `query SearchUsers($login: String!) {
+    //         search(query: $login, type: USER, first: 10) {
+    //           edges {
+    //             node {
+    //               ... on User {
+    //                 name
+    //                 login
+    //                 company
+    //                 repositories(privacy: PUBLIC) {
+    //                   totalCount
+    //                 }
+    //                 followers {
+    //                   totalCount
+    //                 }
+    //               }
+    //             }
+    //           }
+    //         }
+    //       }`, 
+    //     login: logins
+    // });
+
+    const dynamicQuery = login.map(login => `${login}: user(login: "${login}") { ...UserFragment }`).join("\n")
+
+    let data = {};
+
+    try {
+        data = await graphqlWithAuth(`
+            {
+            ${dynamicQuery}
+        }
+        
+        fragment UserFragment on User {
+            name
+            login
+            company
+            repositories(privacy: PUBLIC) {
+                totalCount
             }
-          }`,
-        login: "ro11ingbutler OR jjjjcccjjf"
-    });
+            followers {
+                totalCount
+            }
+        }`);
+    } catch (error) {
+        if (error instanceof GraphqlResponseError) {
+            data = error.response.data
+            console.log("Request failed:", error.request); // { query, variables: {}, headers: { authorization: 'token secret123' } }
+            console.log(error.message); // Field 'bioHtml' doesn't exist on type 'User'
+        } else {
+            // handle non-GraphQL error
+        }
+    }
 
- 
-    console.log(data)
+    const sortedData = Object.keys(data).sort().reduce(
+        (obj, key) => {
+            obj[key] = data[key];
+            return obj;
+        },
+        {}
+    );
 
-    res.json(data)
+
+
+    // console.log(dynamicQuery)
+
+    // const sortedData = search.edges.sort(({node: a}, {node: b}) => a.name.localeCompare(b.name))
+    // res.json(sortedData)
+
+    // const userNames = search.edges.map(edge => edge.node.name);
+    // console.log(userNames);
+
+    // res.json('asd')
+    res.json(sortedData)
 })
 
 
