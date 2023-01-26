@@ -1,4 +1,4 @@
-const { authJwt } = require("../middleware");
+const { authJwt, validations } = require("../middleware");
 const controller = require("../controllers/user.controller");
 
 module.exports = function (app) {
@@ -9,24 +9,9 @@ module.exports = function (app) {
         );
         next();
     });
-
-    //   app.get("/api/test/all", controller.allAccess);
-
     app.post(
         "/api/list",
-        [authJwt.verifyToken],
+        [authJwt.verifyToken, validations.checkMaxTenLogins],
         controller.list
     );
-
-    //   app.get(
-    //     "/api/test/mod",
-    //     [authJwt.verifyToken, authJwt.isModerator],
-    //     controller.moderatorBoard
-    //   );
-
-    //   app.get(
-    //     "/api/test/admin",
-    //     [authJwt.verifyToken, authJwt.isAdmin],
-    //     controller.adminBoard
-    //   );
 };
