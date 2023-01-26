@@ -38,6 +38,7 @@ Obtain an access token from the [Login](#Login) endpoint.
 
 ### Register
 ---
+__Route:__ `auth/register`  
 __Description:__ Pass an email and password to get a JWT valid for 24 hours  
 __Authorization required:__ `false`  
 __Method:__ `\POST`  
@@ -102,6 +103,7 @@ __Content-Type:__ `application/json`
 
 ### Login
 ---
+__Route:__ `auth/login`  
 __Description:__ Pass an email and password to get a JWT valid for 24 hours  
 __Authorization required:__ `false`  
 __Method:__ `\POST`  
@@ -167,6 +169,7 @@ __Content-Type:__ `application/json`
 
 ### List users by handle 
 ---
+__Route:__ `list`  
 __Description:__ List details of GitHub users based on account handle. Max 10.  
 __Authorization required:__ `true` (see [Authorization](#Authorization))  
 __Method:__ `\POST`  
