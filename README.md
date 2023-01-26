@@ -1,5 +1,4 @@
 # Github API - Backend Engineer Technical Exam
----
 A Nodejs API project that has an API endpoint that takes a list of github usernames (up to a maximum of 10 names) and returns to the user a list of basic information for those users including:
 1. Name
 2. Login
@@ -7,28 +6,26 @@ A Nodejs API project that has an API endpoint that takes a list of github userna
 4. Number of followers
 5. Number of public repositories
 6. The average number of followers per public repository (ie. number of followers divided by the number of public repositories)
+
 In order to access the API endpoint described above, the user should register and login.
 
 
 ## Table of contents 
----
-* [Base URL](#Base%20URL)
+* [Base URL](#Base-URL)
 * [Authorization](#Authorization)
 * [Endpoints](#Endpoints)
 	* Does not require Auth
 		* [Register](#Register)
 		* [Login](#Login)
 	* Requires Auth
-		* [List users by handle](#List%20users%20by%20handle)
+		* [List users by handle](#List-users-by-handle)
 
 
 ## Base URL
----
 `https://joyride-backend-exam.herokuapp.com/api/`
 
 
 ## Authorization
----
 Authorization headers
 
 ```
@@ -38,14 +35,11 @@ x-access-token: <JWT>
 Obtain an access token from the [Login](#Login) endpoint.
 
 ## Endpoints
----
-
 
 ### Register
----
-__Description:__ Pass an email and password to get a JWT valid for 24 hours
-__Authorization required:__ `false`
-__Method:__ `\POST`
+__Description:__ Pass an email and password to get a JWT valid for 24 hours  
+__Authorization required:__ `false`  
+__Method:__ `\POST`  
 
 #### Request Payload
 __Content-Type:__ `application/json`
@@ -106,10 +100,9 @@ __Content-Type:__ `application/json`
 
 
 ### Login
----
-__Description:__ Pass an email and password to get a JWT valid for 24 hours
-__Authorization required:__ `false`
-__Method:__ `\POST`
+__Description:__ Pass an email and password to get a JWT valid for 24 hours  
+__Authorization required:__ `false`  
+__Method:__ `\POST`  
 
 #### Request Payload
 __Content-Type:__ `application/json`
@@ -171,10 +164,9 @@ __Content-Type:__ `application/json`
 
 
 ### List users by handle 
----
-__Description:__ List details of GitHub users based on account handle. Max 10.
-__Authorization required:__ `true` (see [Authorization](#Authorization))
-__Method:__ `\POST`
+__Description:__ List details of GitHub users based on account handle. Max 10.  
+__Authorization required:__ `true` (see [Authorization](#Authorization))  
+__Method:__ `\POST`  
 
 #### Headers
 | Key | Example value | Required |
@@ -317,4 +309,4 @@ __Content-Type:__ `application/json`
 
 ---
 
-###### 🚧 End of documentation - [back to top](#Github%20API%20-%20Backend%20Engineer%20Technical%20Exam) 🚧
+###### 🚧 End of documentation - [back to top](#Github-API---Backend-Engineer-Technical-Exam) 🚧
