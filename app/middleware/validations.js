@@ -21,9 +21,16 @@ const checkMaxTenLogins = async (req, res, next) => {
   next()
 }
 
+const removeDuplicates = async (req, res, next) => {
+  const { login } = req.body
+  req.body.login = [...new Set(login)]
+  next()
+}
+
 const validations = {
   checkMaxTenLogins,
-  checkReqBody
+  checkReqBody,
+  removeDuplicates
 }
 
 module.exports = validations

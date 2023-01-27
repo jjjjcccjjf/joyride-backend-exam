@@ -11,7 +11,7 @@ module.exports = function (app) {
   })
   app.post(
     '/api/list',
-    [authJwt.verifyToken, validations.checkReqBody, validations.checkMaxTenLogins, caching.redisLookup],
+    [authJwt.verifyToken, validations.checkReqBody, validations.checkMaxTenLogins, validations.removeDuplicates, caching.redisLookup],
     controller.list
   )
 }
