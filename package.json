@@ -8,7 +8,8 @@
     "start": "node index.js",
     "dev": "node index.js",
     "live": "nodemon index.js",
-    "lint:fix": "eslint --fix ./*.js"
+    "lint:fix": "eslint app/**/*.js --fix",
+    "lint": "eslint app/**/*.js"
   },
   "repository": {
     "type": "git",
