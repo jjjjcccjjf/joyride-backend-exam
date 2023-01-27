@@ -8,6 +8,7 @@
     "start": "node index.js",
     "dev": "node index.js",
     "live": "nodemon index.js",
+    "fakelive": "cross-env NODE_ENV=production nodemon index.js",
     "lint:fix": "eslint app/**/*.js --fix",
     "lint": "eslint app/**/*.js"
   },
@@ -34,6 +35,7 @@
     "redis": "^4.6.1"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "eslint": "^8.32.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
