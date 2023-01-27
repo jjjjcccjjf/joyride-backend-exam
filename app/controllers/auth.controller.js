@@ -32,7 +32,7 @@ exports.login = async (req, res) => {
     }
   }).then(user => {
     if (!user) {
-      return res.status(400).json(responseHelper.responseTemplate({}, 'User not found or invalid request payload. See documentation for more info: https://github.com/jjjjcccjjf/joyride-backend-exam'))
+      return res.status(400).json(responseHelper.responseTemplate({}, 'User not found.'))
     }
 
     const passwordIsValid = bcrypt.compareSync(

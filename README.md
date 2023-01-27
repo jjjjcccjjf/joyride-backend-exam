@@ -160,7 +160,7 @@ __Content-Type:__ `application/json`
 {
     "data": {},
     "meta": {
-        "errors": "User not found or invalid request payload. See documentation for more info: https://github.com/jjjjcccjjf/joyride-backend-exam",
+        "errors": "User not found or invalid request payload.",
         "totalRows": 0
     }
 }
@@ -287,7 +287,7 @@ __Content-Type:__ `application/json`
 {
     "data": {},
     "meta": {
-        "errors": "Illegal access token provided. See documentation for more info: https://github.com/jjjjcccjjf/joyride-backend-exam",
+        "errors": "Illegal access token provided.",
         "totalRows": 0
     }
 }

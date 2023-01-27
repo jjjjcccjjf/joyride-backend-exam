@@ -13,5 +13,10 @@ module.exports = (app) => {
   ],
   controller.register)
 
-  app.post('/api/auth/login', controller.login)
+  app.post('/api/auth/login', [
+    body('email').not().isEmpty().withMessage('Email field must not be empty'),
+    body('password').not().isEmpty().withMessage('Password field must not be empty'),
+    validator
+  ],
+  controller.login)
 }
