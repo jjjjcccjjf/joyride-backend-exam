@@ -10,7 +10,7 @@ const verifyToken = (req, res, next) => {
 
   jwt.verify(token, process.env.APP_SECRET, (err, decoded) => {
     if (err) {
-      return res.status(401).send(responseHelper.responseTemplate({}, 'Illegal token provided. See documentation for more info: https://github.com/jjjjcccjjf/joyride-backend-exam'))
+      return res.status(401).send(responseHelper.responseTemplate({}, 'Illegal access token provided. See documentation for more info: https://github.com/jjjjcccjjf/joyride-backend-exam'))
     }
     req.userId = decoded.id
     next()

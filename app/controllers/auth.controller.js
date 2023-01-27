@@ -14,9 +14,10 @@ exports.register = async (req, res) => {
       password: bcrypt.hashSync(password, 8)
     }
   }).catch(err => {
-    res.status(500).json(responseHelper.responseTemplate({}, err.message))
+    return res.status(500).json(responseHelper.responseTemplate({}, err.message))
   })
 
+  // Remove the password field in the response
   delete result.password
 
   res.json(responseHelper.responseTemplate(result, ''))
@@ -47,6 +48,7 @@ exports.login = async (req, res) => {
       expiresIn: 86400 // 24 hours
     })
 
+    // Remove the password field in the response
     delete user.password
     user.accessToken = token
 
