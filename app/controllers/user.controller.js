@@ -1,4 +1,4 @@
-const responseHelper = require('../helpers/responseHelper')
+const responseHelper = require('../helpers/response.helper')
 const redis = require('../config/redis.config')
 
 const { graphql, GraphqlResponseError } = require('@octokit/graphql')

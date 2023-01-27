@@ -1,6 +1,6 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
-const responseHelper = require('../helpers/responseHelper')
+const responseHelper = require('../helpers/response.helper')
 
 const checkRequestBody = async (req, res, next) => {
   const { email, password } = req.body

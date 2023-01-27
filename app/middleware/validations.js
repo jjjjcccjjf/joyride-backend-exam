@@ -1,4 +1,4 @@
-const responseHelper = require('../helpers/responseHelper')
+const responseHelper = require('../helpers/response.helper')
 
 const checkReqBody = async (req, res, next) => {
   const { login } = req.body

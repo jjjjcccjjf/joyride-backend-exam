@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const responseHelper = require('../helpers/responseHelper')
+const responseHelper = require('../helpers/response.helper')
 
 const verifyToken = (req, res, next) => {
   const token = req.headers['x-access-token']
