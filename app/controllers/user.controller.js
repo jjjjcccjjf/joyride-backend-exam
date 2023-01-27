@@ -10,36 +10,44 @@ const graphqlWithAuth = graphql.defaults({
 
 exports.list = async (req, res) => {
   const { login } = req.body
+  const { __fromRedisUsers } = req.body
 
-  let { __fromRedisUsers } = req.body
+  const redisData = __fromRedisUsers.map(item => responseHelper.formatData(item, true))
+  const apiData = []
 
-  const dynamicQuery = login.map(login => `${login}: user(login: "${login}") { ...UserFragment }`).join('\n')
   let data = {}
-  let errors = {}
+  let errors = ''
+  let mergedData = []
 
-  try {
-    data = await graphqlWithAuth(`
-        {
+  if (login.length > 0) {
+    const dynamicQuery = login.map(login => `${login}: user(login: "${login}") { ...UserFragment }`).join('\n')
+
+    try {
+      data = await graphqlWithAuth(`
+          query {
             ${dynamicQuery}
-        }
-        
-        fragment UserFragment on User {
+          }
+          
+          fragment UserFragment on User {
             name
             login
             company
             repositories(privacy: PUBLIC) {
-                totalCount
+              totalCount
             }
             followers {
-                totalCount
+              totalCount
             }
-        }`)
-  } catch (error) {
-    if (error instanceof GraphqlResponseError) {
-      data = error.response.data
-      errors = error.message
-    } else {
-      // handle non-GraphQL error
+          }`)
+    } catch (error) {
+      if (error instanceof GraphqlResponseError) {
+        data = error.response.data
+        errors = error.message
+      } else {
+        // handle non-GraphQL error
+      }
+    } finally {
+      console.log('API call attempted')
     }
   }
 
@@ -48,25 +56,19 @@ exports.list = async (req, res) => {
     data = Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null))
   }
 
-  let formattedData = []
+  // Remove users that were not found, format the data, and store it to redis
   for (const key in data) {
     if (data[key] !== null) {
-      formattedData.push(responseHelper.formatData(data[key]))
+      apiData.push(responseHelper.formatData(data[key]))
       redis.set(key, JSON.stringify(data[key]), 'EX', 120)
     }
   }
 
-  __fromRedisUsers = __fromRedisUsers.map(item => responseHelper.formatData(item, true))
+  // Merge the formatted data from redis and from the API
+  mergedData = [...redisData, ...apiData]
 
-  formattedData = formattedData.concat(__fromRedisUsers)
-  // for (let key in data) {
-  //     redis.set(key, JSON.stringify(data[key]), "EX", 30);
-  // }
-
-  // res.json(formattedData)
-  // return;
-
-  formattedData.sort((a, b) => {
+  // Sort the data alphabetically by login/handle/username
+  mergedData.sort((a, b) => {
     if (a.login < b.login) {
       return -1
     }
@@ -76,5 +78,5 @@ exports.list = async (req, res) => {
     return 0
   })
 
-  res.json(responseHelper.responseTemplate(formattedData, errors))
+  res.json(responseHelper.responseTemplate(mergedData, errors))
 }

@@ -3,11 +3,11 @@ const redis = require('../config/redis')
 const redisLookup = async (req, res, next) => {
   const { login } = req.body
 
+  // Fetch all users from redis
   const redisUsers = await Promise.all(login.map(async item => {
     const redisItem = await redis.get(item)
     if (redisItem) {
-      // remove from login
-
+      // Remove from array when found in redis
       const index = login.indexOf(item)
       if (index > -1) { // only splice array when item is found
         login.splice(index, 1) // 2nd parameter means remove one item only

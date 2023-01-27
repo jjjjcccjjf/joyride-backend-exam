@@ -12,5 +12,5 @@ require('./app/routes/auth.routes')(app)
 require('./app/routes/user.routes')(app)
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`)
+  console.log(`Server is listening to port ${PORT}`)
 })
