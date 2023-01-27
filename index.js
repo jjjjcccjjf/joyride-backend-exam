@@ -1,4 +1,5 @@
-require('dotenv').config()
+const dotenv = require('dotenv')
+dotenv.config()
 const express = require('express')
 const cors = require('cors')
 
@@ -16,9 +17,11 @@ app.use(function (req, res, next) {
   next()
 })
 
+// Routes
 require('./app/routes/auth.routes')(app)
 require('./app/routes/user.routes')(app)
 
+// Start server
 app.listen(PORT, () => {
   console.log(`Server is listening to port ${PORT}`)
 })
