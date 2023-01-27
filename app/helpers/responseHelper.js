@@ -28,7 +28,6 @@ function formatData (data, fromCache = false) {
     followers_count: data.followers.totalCount,
     avg_followers_count: data.followers.totalCount / data.repositories.totalCount,
     fromCache
-    // TODO potentially remove this ^^^
   }
 }
 

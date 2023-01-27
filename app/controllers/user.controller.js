@@ -1,11 +1,5 @@
-const Redis = require('ioredis')
 const responseHelper = require('../helpers/responseHelper')
-
-const redis = new Redis({
-  host: 'redis-13854.c84.us-east-1-2.ec2.cloud.redislabs.com',
-  port: 13854,
-  password: process.env.REDIS_PASSWORD
-})
+const redis = require('../config/redis')
 
 const { graphql, GraphqlResponseError } = require('@octokit/graphql')
 const graphqlWithAuth = graphql.defaults({
@@ -16,13 +10,9 @@ const graphqlWithAuth = graphql.defaults({
 
 exports.list = async (req, res) => {
   const { login } = req.body
+
   let { __fromRedisUsers } = req.body
 
-  // res.send({login, __fromRedisUsers, reqbody: req.body})
-
-  // return;
-
-  // if login is empty skip map
   const dynamicQuery = login.map(login => `${login}: user(login: "${login}") { ...UserFragment }`).join('\n')
   let data = {}
   let errors = {}
@@ -57,25 +47,6 @@ exports.list = async (req, res) => {
   if (data) {
     data = Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null))
   }
-
-  // Sort the data alphabetically
-  // const sortedData = Object.keys(data).sort().reduce(
-  //     (obj, key) => {
-  //         obj[key] = data[key];
-  //         return obj;
-  //     },
-  //     {}
-  // );
-
-  // array.sort((a, b) => {
-  //     if (a.login < b.login) {
-  //         return -1;
-  //     }
-  //     if (a.login > b.login) {
-  //         return 1;
-  //     }
-  //     return 0;
-  // });
 
   let formattedData = []
   for (const key in data) {

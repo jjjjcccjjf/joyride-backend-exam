@@ -1,10 +1,4 @@
-const Redis = require('ioredis')
-const redis = new Redis({
-  host: 'redis-13854.c84.us-east-1-2.ec2.cloud.redislabs.com',
-  port: 13854,
-  password: process.env.REDIS_PASSWORD
-})
-// @Refactor ^^
+const redis = require('../config/redis')
 
 const redisLookup = async (req, res, next) => {
   const { login } = req.body
