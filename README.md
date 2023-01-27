@@ -39,7 +39,7 @@ Obtain an access token from the [Login](#Login) endpoint.
 ### Register
 ---
 __Route:__ `auth/register`  
-__Description:__ Pass an email and password to get a JWT valid for 24 hours  
+__Description:__ Pass an email and password to create an account
 __Authorization required:__ `false`  
 __Method:__ `\POST`  
 
@@ -263,6 +263,30 @@ __Content-Type:__ `application/json`
         "errors": "Invalid request payload. See documentation for more info: https://github.com/jjjjcccjjf/joyride-backend-exam",
         "totalRows": 0
     }
+}
+```
+
+##### 401 Unauthorized
+
+###### Missing token
+```
+{
+    "data": {},
+    "meta": {
+        "errors": "Missing authentication token. See documentation for more info: https://github.com/jjjjcccjjf/joyride-backend-exam",
+        "totalRows": 0
+    }
+}
+```
+
+###### Illegal token
+```
+{
+    "data": {},
+    "meta": {
+        "errors": "Illegal token provided. See documentation for more info: https://github.com/jjjjcccjjf/joyride-backend-exam",
+        "totalRows": 0
+    }
 }
 ```
 

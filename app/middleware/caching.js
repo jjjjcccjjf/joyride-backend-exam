@@ -34,32 +34,7 @@ redisLookup = async (req, res, next) => {
             req.body.__fromRedisUsers = filteredArr
             next();
         })
-
-    // return;
-    // return;
-    // res.json(redisUsers)
-    // try {
-    //     const cacheResults = await redisClient.get(species);
-    //     if (cacheResults) {
-    //         isCached = true;
-    //         results = JSON.parse(cacheResults);
-    //     } else {
-    //         results = await fetchApiData(species);
-    //         if (results.length === 0) {
-    //             throw "API returned an empty array";
-    //         }
-    //     }
-
-    //     res.send({
-    //         fromCache: isCached,
-    //         data: results,
-    //     });
-    // } catch (error) {
-    //     res.status(400).send({
-    //         message: "Bad request. Username is already in use!"
-    //     });
-    //     return;
-    // }
+ 
 }
 
 

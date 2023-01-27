@@ -85,7 +85,7 @@ exports.list = async (req, res) => {
     for (let key in data) {
         if (data[key] !== null) {
             formattedData.push(responseHelper.formatData(data[key]))
-            redis.set(key, JSON.stringify(data[key]), "EX", 30);
+            redis.set(key, JSON.stringify(data[key]), "EX", 120);
         }
     }
 
