@@ -44,7 +44,8 @@ exports.list = async (req, res) => {
         data = error.response.data
         errors = error.message
       } else {
-        // handle non-GraphQL error
+        // Handle non-GraphQL error
+        return res.status(400).json(responseHelper.responseTemplate({}, `Malformed request. ${error.message}`))
       }
     } finally {
       console.log('API call attempted')
