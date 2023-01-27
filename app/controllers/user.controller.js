@@ -18,11 +18,19 @@ const graphqlWithAuth = graphql.defaults({
 exports.list = async (req, res) => {
 
     const { login } = req.body
+    let { __fromRedisUsers } = req.body
+
+    // res.send({login, __fromRedisUsers, reqbody: req.body})
+
+    // return;
+
+    // if login is empty skip map
     const dynamicQuery = login.map(login => `${login}: user(login: "${login}") { ...UserFragment }`).join("\n")
     let data = {};
     let errors = {};
 
     try {
+        
         data = await graphqlWithAuth(`
         {
             ${dynamicQuery}
@@ -49,7 +57,9 @@ exports.list = async (req, res) => {
     }
 
     // Delete key-value pairs that were not found
-    data = Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null));
+    if (data) {
+        data = Object.fromEntries(Object.entries(data).filter(([key, value]) => value !== null));
+    }
 
 
     // Sort the data alphabetically
@@ -79,9 +89,15 @@ exports.list = async (req, res) => {
         }
     }
 
+    __fromRedisUsers = __fromRedisUsers.map(item => responseHelper.formatData(item, true))
+
+    formattedData = formattedData.concat(__fromRedisUsers)
     // for (let key in data) {
     //     redis.set(key, JSON.stringify(data[key]), "EX", 30);
     // }
+
+    // res.json(formattedData)
+    // return;
 
     formattedData.sort((a, b) => {
         if (a.login < b.login) {
@@ -92,6 +108,7 @@ exports.list = async (req, res) => {
         }
         return 0;
     });
+
 
     res.json(responseHelper.responseTemplate(formattedData, errors))
 }
