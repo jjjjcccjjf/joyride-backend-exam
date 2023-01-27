@@ -1,5 +1,5 @@
 const responseHelper = require('../helpers/responseHelper')
-const redis = require('../config/redis')
+const redis = require('../config/redis.config')
 
 const { graphql, GraphqlResponseError } = require('@octokit/graphql')
 const graphqlWithAuth = graphql.defaults({

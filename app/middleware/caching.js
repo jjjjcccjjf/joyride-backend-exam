@@ -1,4 +1,4 @@
-const redis = require('../config/redis')
+const redis = require('../config/redis.config')
 
 const redisLookup = async (req, res, next) => {
   const { login } = req.body
