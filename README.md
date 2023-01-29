@@ -1,5 +1,6 @@
 # Github API - Backend Engineer Technical Exam
-A Nodejs API project that has an API endpoint that takes a list of github usernames (up to a maximum of 10 names) and returns to the user a list of basic information for those users including:
+A Nodejs API project that has an API endpoint that takes a list of github usernames (up to a maximum of 10 names) and returns to the user a list of basic information for those users including
+
 1. Name
 2. Login
 3. Company
@@ -19,6 +20,7 @@ In order to access the API endpoint described above, the user should register an
 		* [Login](#Login)
 	* Requires Auth
 		* [List users by handle](#List-users-by-handle)
+* [Generic errors](#Generic-errors)
 
 
 ## Base URL
@@ -89,14 +91,16 @@ __Content-Type:__ `application/json`
 }
 ```
 
-###### Missing fields
+##### 422 Unprocessable Entity
+
+###### Missing / malformed fields
 ```
 {
-    "data": {},
-    "meta": {
-        "errors": "Email and password is required. See documentation for more info: https://github.com/jjjjcccjjf/joyride-backend-exam",
-        "totalRows": 0
-    }
+    "data": {},
+    "meta": {
+        "errors": "Password field must be at least 8 characters. Email field must be a valid email address.",
+        "totalRows": 0
+    }
 }
 ```
 
@@ -155,17 +159,29 @@ __Content-Type:__ `application/json`
 }
 ```
 
-###### Invalid payload/email
+###### User nonexistent
 ```
 {
     "data": {},
     "meta": {
-        "errors": "User not found or invalid request payload.",
+        "errors": "User not found.",
         "totalRows": 0
     }
 }
 ```
 
+##### 422 Unprocessable Entity
+
+###### Missing / malformed fields
+```
+{
+    "data": {},
+    "meta": {
+        "errors": "Password field must not be empty. Email field must not be empty.",
+        "totalRows": 0
+    }
+}
+```
 
 ### List users by handle 
 ---
@@ -263,7 +279,7 @@ __Content-Type:__ `application/json`
 {
     "data": [],
     "meta": {
-        "errors": "Invalid request payload. See documentation for more info: https://github.com/jjjjcccjjf/joyride-backend-exam",
+        "errors": "Invalid request payload.",
         "totalRows": 0
     }
 }
@@ -276,7 +292,7 @@ __Content-Type:__ `application/json`
 {
     "data": {},
     "meta": {
-        "errors": "Missing authentication token. See documentation for more info: https://github.com/jjjjcccjjf/joyride-backend-exam",
+        "errors": "Missing authentication token.",
         "totalRows": 0
     }
 }
@@ -288,6 +304,24 @@ __Content-Type:__ `application/json`
     "data": {},
     "meta": {
         "errors": "Illegal access token provided.",
+        "totalRows": 0
+    }
+}
+```
+
+---
+
+### Generic errors
+
+##### 400 Bad Request
+
+###### Illegal request payload
+
+```
+{
+    "data": {},
+    "meta": {
+        "errors": "Illegal JSON format for request payload",
         "totalRows": 0
     }
 }
